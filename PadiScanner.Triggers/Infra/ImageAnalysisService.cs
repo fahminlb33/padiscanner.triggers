@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
@@ -28,7 +30,11 @@ public class ImageAnalysisService : IImageAnalysisService
     {
         try
         {
-            var request = await _httpClient.PostAsJsonAsync("/analysis/image", model);
+            var body = JsonSerializer.Serialize(model);
+            _logger.LogInformation(body);
+
+            var content = new StringContent(body, Encoding.UTF8, "application/json");
+            var request = await _httpClient.PostAsync("/analysis/image", content);
             request.EnsureSuccessStatusCode();
 
             return await request.Content.ReadFromJsonAsync<PredictionResult>();
