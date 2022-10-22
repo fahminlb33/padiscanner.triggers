@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "PadiScanner.Triggers": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7161",
+      "launchBrowser": false
+    }
+  }
+}
