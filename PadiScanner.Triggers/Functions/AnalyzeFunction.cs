@@ -57,6 +57,7 @@ namespace PadiScanner.Triggers.Functions
                 job.HeatmapImageUrl = result.Heatmap;
                 job.OverlayedImageUrl = result.Superimposed;
                 job.ClippedImageUrl = result.Masked;
+                job.Severity = result.Severity;
 
                 await _dbContext.SaveChangesAsync();
                 log.LogInformation("Job finished: {0}", job.Id);

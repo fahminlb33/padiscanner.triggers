@@ -75,6 +75,8 @@ public class PredictionResult
 
     [JsonPropertyName("masked")]
     public Uri Masked { get; set; }
+    [JsonPropertyName("severity")]
+    public double Severity { get; set; }
 }
 
 public class ClassProbabilities
