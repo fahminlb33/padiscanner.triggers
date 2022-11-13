@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
@@ -42,12 +45,16 @@ namespace PadiScanner.Triggers.Functions
                 log.LogInformation("Starting job: {0}", job.Id);
 
                 // run prediction
-                var result = await _imageAnalysisService.Analyze(new PredictionRequest
+                var request = new PredictionRequest
                 {
                     UserId = job.UploaderId.ToString(),
                     PredictionId = job.Id.ToString(),
                     OriginalFilename = Path.GetFileName(job.OriginalImageUrl.AbsolutePath)
-                });
+                };
+                
+                var result = await _imageAnalysisService.Analyze(request);
+                Activity.Current?.AddBaggage("padi.analysis.request", JsonSerializer.Serialize(request));
+                Activity.Current?.AddBaggage("padi.analysis.result", JsonSerializer.Serialize(result));
 
                 // update status to success
                 job.Status = PredictionStatus.Success;
